@@ -13,18 +13,19 @@ vim.opt.mouse = 'a'
 vim.opt.showmode = false
 
 vim.opt.clipboard = 'unnamedplus'
-vim.g.clipboard = {
-  name = "wayclip",
-  copy = {
-    ["+"] = "waycopy",
-    ["*"] = "waycopy",
-  },
-  paste = {
-    ["+"] = "waypaste",
-    ["*"] = "waypaste",
-  },
-  cache_enabled = true,
-}
+
+--  vim.g.clipboard = {
+--   name = "wayclip",
+--   copy = {
+--     ["+"] = "waycopy",
+--     ["*"] = "waycopy",
+--   },
+--   paste = {
+--     ["+"] = "waypaste",
+--     ["*"] = "waypaste",
+--   },
+--   cache_enabled = true,
+-- }
 
 vim.opt.breakindent = true
 
@@ -541,20 +542,20 @@ require('lazy').setup({
       end
     end,
   },
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    main = 'nvim-treesitter.configs',
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      auto_install = true,
-      highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-  },
+  -- {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   build = ':TSUpdate',
+  --   main = 'nvim-treesitter.configs',
+  --   opts = {
+  --     ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+  --     auto_install = true,
+  --     highlight = {
+  --       enable = true,
+  --       additional_vim_regex_highlighting = { 'ruby' },
+  --     },
+  --     indent = { enable = true, disable = { 'ruby' } },
+  --   },
+  -- },
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
