@@ -187,7 +187,7 @@ require('lazy').setup({
         { desc = "Go to harpoon file [8]" })
       vim.keymap.set("n", "<leader>9", function() require("harpoon.ui").nav_file(9) end,
         { desc = "Go to harpoon file [9]" })
-      vim.keymap.set("n", "<leader>0", function() require("harpoon.ui").nav_file(0) end,
+      vim.keymap.set("n", "<leader>0", function() require("harpoon.ui").nav_file(10) end,
         { desc = "Go to harpoon file 1[0]" })
     end
   },
@@ -214,6 +214,14 @@ require('lazy').setup({
         defaults = {
           preview = {
             filesize_limit = 0.2,
+          },
+          file_ignore_patterns = {
+            "^.git/" -- explicitly ignore the .git directory
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true
           },
         },
         extensions = {
@@ -461,6 +469,12 @@ require('lazy').setup({
         go = { 'gofumpt' },
         golang = { 'gofumpt' },
         templ = { 'templ' }
+      },
+      formatters = {
+        prettier = {
+          --command = "/home/user/.local/share/nvim/mason/bin/prettier",
+          prefer_local = false
+        },
       },
     },
   },
