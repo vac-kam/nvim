@@ -387,6 +387,7 @@ require('lazy').setup({
       }
       local capabilities = require('blink.cmp').get_lsp_capabilities()
       local servers = {
+        ts_ls = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -556,20 +557,28 @@ require('lazy').setup({
       end
     end,
   },
-  -- {
-  --   'nvim-treesitter/nvim-treesitter',
-  --   build = ':TSUpdate',
-  --   main = 'nvim-treesitter.configs',
-  --   opts = {
-  --     ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-  --     auto_install = true,
-  --     highlight = {
-  --       enable = true,
-  --       additional_vim_regex_highlighting = { 'ruby' },
-  --     },
-  --     indent = { enable = true, disable = { 'ruby' } },
-  --   },
-  -- },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    version = '~0.10.0',
+    build = ':TSUpdate',
+    main = 'nvim-treesitter.configs',
+    opts = {
+      ensure_installed = {
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc',
+        'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'typescript', 'javascript', 'tsx', 'json', 'yaml',
+        'css', 'dockerfile', 'graphql', 'regex', 'jsdoc',
+      },
+      auto_install = true,
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
+  },
+  {
+    'lukas-reineke/indent-blankline.nvim',
+    main = 'ibl',
+    opts = {},
+  },
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
