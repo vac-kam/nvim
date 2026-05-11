@@ -65,7 +65,7 @@ vim.opt.shortmess:append("I")
 vim.keymap.set('n', '<leader>q', ':quit<CR>', { desc = "[q]uit Neovim" })
 vim.keymap.set('n', '<leader>w', ':write<CR>', { desc = "[w]rite to the file" })
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Show [d]iagnostics' })
+-- NOTE: Diagnostic loclist removed in favor of <leader>sd (Telescope Search Diagnostics)
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 --vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -159,6 +159,7 @@ require('lazy').setup({
       spec = {
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>d', group = '[D]ebug' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -527,21 +528,47 @@ require('lazy').setup({
     priority = 1000,
     lazy = false,
     config = function()
-      require 'kanso'.setup {
-        transparent = true,
-        colors = {
-          palette = {
-            inkWhite = "#cccccc",
-            inkGray = "#aaaaaa",
-            zenBlue = "#777777",
-            inkBlack0 = "#222222",
-            inkBlack1 = "#444444",
-            inkBlack2 = "#4f4f4f",
-            inkBlack3 = "#555555"
-          }
-        },
+      local dark_overrides = {
+        palette = {
+          inkWhite  = "#cccccc",
+          inkGray   = "#aaaaaa",
+          zenBlue   = "#777777",
+          inkBlack0 = "#222222",
+          inkBlack1 = "#444444",
+          inkBlack2 = "#4f4f4f",
+          inkBlack3 = "#555555",
+        }
       }
-      vim.cmd("colorscheme kanso")
+
+      local function setup_kanso()
+        local is_dark = vim.o.background == "dark"
+        require 'kanso'.setup {
+          transparent = true,
+          colors = is_dark and { palette = dark_overrides.palette } or {},
+        }
+      end
+
+      -- Detect macOS system appearance and set background + colorscheme accordingly
+      local appearance = vim.fn.system("defaults read -g AppleInterfaceStyle 2>/dev/null"):gsub("%s+", "")
+      local is_dark_system = appearance == "Dark"
+      vim.o.background = is_dark_system and "dark" or "light"
+
+      setup_kanso()
+      vim.cmd("colorscheme " .. (is_dark_system and "kanso-ink" or "kanso-pearl"))
+
+      -- Re-apply setup whenever the colorscheme changes (triggered by theme-sync).
+      -- The guard prevents the inner colorscheme call from recursing.
+      local applying = false
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "kanso*",
+        callback = function()
+          if applying then return end
+          applying = true
+          setup_kanso()
+          vim.cmd("colorscheme " .. vim.g.colors_name)
+          applying = false
+        end,
+      })
     end,
   },
   {
@@ -579,6 +606,7 @@ require('lazy').setup({
     main = 'ibl',
     opts = {},
   },
+  require 'kickstart.plugins.debug',
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
